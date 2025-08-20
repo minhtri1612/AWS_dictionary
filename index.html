@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Dictionary</title>
+    <style>
+        /* Basic CSS Reset & Font Styling */
+        :root {
+            --primary-color: #007bff;
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        /* Main container for the app */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        /* Header styling */
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--dark-gray);
+        }
+
+        /* Search bar styling */
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #searchInput {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+
+        #searchButton {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #searchButton:hover {
+            background-color: #0056b3;
+        }
+
+        /* Results area styling */
+        #resultContainer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            min-height: 50px; /* Prevents layout shift */
+        }
+        
+        #resultContainer .loading {
+            text-align: center;
+            color: #6c757d;
+        }
+
+        #resultContainer .error {
+            text-align: center;
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        #resultContainer .definition {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Serverless Dictionary</h1>
+        
+        <!-- Search input and button -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Enter a word...">
+            <button id="searchButton">Search</button>
+        </div>
+
+        <!-- Area to display the result -->
+        <div id="resultContainer">
+            <!-- Content will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const resultContainer = document.getElementById('resultContainer');
+
+            const performSearch = async () => {
+                const word = searchInput.value.trim();
+                if (!word) {
+                    resultContainer.innerHTML = '<p class="error">Please enter a word.</p>';
+                    return;
+                }
+
+                // 1. Show a loading message
+                resultContainer.innerHTML = '<p class="loading">Searching...</p>';
+                
+                // --- IMPORTANT ---
+                // This is where you connect to your AWS backend.
+                // Replace the URL below with your actual API Gateway endpoint URL.
+                // Your URL will look something like: 
+                // https://xxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/get-definition
+                // For this example, we'll use a public dictionary API.
+                const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
+
+                try {
+                    // 2. Fetch data from the API
+                    const response = await fetch(apiUrl);
+
+                    if (!response.ok) {
+                        // Handle cases where the word is not found
+                        throw new Error('Definition not found.');
+                    }
+
+                    const data = await response.json();
+                    
+                    // 3. Extract the first definition and display it
+                    const firstDefinition = data[0]?.meanings[0]?.definitions[0]?.definition;
+                    if (firstDefinition) {
+                        resultContainer.innerHTML = `<p class="definition">${firstDefinition}</p>`;
+                    } else {
+                        throw new Error('Definition not found.');
+                    }
+
+                } catch (error) {
+                    // 4. Show an error message if something goes wrong
+                    resultContainer.innerHTML = `<p class="error">${error.message}</p>`;
+                }
+            };
+
+            // Trigger search on button click
+            searchButton.addEventListener('click', performSearch);
+
+            // Trigger search when user presses "Enter" in the input field
+            searchInput.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

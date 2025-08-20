@@ -1,0 +1,134 @@
+[
+  {
+    "word": "EC2 (Elastic Compute Cloud)",
+    "definition": "Provides secure, resizable compute capacity (virtual servers) in the cloud."
+  },
+  {
+    "word": "Lambda",
+    "definition": "A serverless compute service that runs your code in response to events and automatically manages the underlying compute resources."
+  },
+  {
+    "word": "S3 (Simple Storage Service)",
+    "definition": "Scalable object storage for data backup, archival, and analytics."
+  },
+  {
+    "word": "DynamoDB",
+    "definition": "A fully managed NoSQL key-value and document database that delivers single-digit millisecond performance at any scale."
+  },
+  {
+    "word": "RDS (Relational Database Service)",
+    "definition": "A managed service for setting up, operating, and scaling relational databases like MySQL, PostgreSQL, Oracle, etc."
+  },
+  {
+    "word": "API Gateway",
+    "definition": "A fully managed service for creating, publishing, maintaining, monitoring, and securing APIs at any scale."
+  },
+  {
+    "word": "Amplify",
+    "definition": "A framework for front-end web and mobile developers to build scalable full-stack applications powered by AWS."
+  },
+  {
+    "word": "VPC (Virtual Private Cloud)",
+    "definition": "A logically isolated section of the AWS Cloud where you can launch AWS resources in a virtual network that you define."
+  },
+  {
+    "word": "Route 53",
+    "definition": "A highly available and scalable cloud Domain Name System (DNS) web service."
+  },
+  {
+    "word": "IAM (Identity and Access Management)",
+    "definition": "Manages user access and permissions to AWS resources securely."
+  },
+  {
+    "word": "CloudFormation",
+    "definition": "An infrastructure-as-code service that allows you to model and provision AWS resources using templates."
+  },
+  {
+    "word": "CloudWatch",
+    "definition": "A monitoring and observability service for applications and resources on AWS."
+  },
+  {
+    "word": "EBS (Elastic Block Store)",
+    "definition": "High-performance block storage volumes for use with Amazon EC2 instances."
+  },
+  {
+    "word": "SNS (Simple Notification Service)",
+    "definition": "A fully managed pub/sub messaging service for application-to-application (A2A) and application-to-person (A2P) communication."
+  },
+  {
+    "word": "SQS (Simple Queue Service)",
+    "definition": "A fully managed message queuing service for decoupling and scaling microservices, distributed systems, and serverless applications."
+  },
+  {
+    "word": "CloudFront",
+    "definition": "A global content delivery network (CDN) that securely delivers data, videos, applications, and APIs with low latency."
+  },
+  {
+    "word": "SageMaker",
+    "definition": "A fully managed service for building, training, and deploying machine learning (ML) models."
+  },
+  {
+    "word": "ECS (Elastic Container Service)",
+    "definition": "A highly scalable, high-performance container orchestration service that supports Docker containers."
+  },
+  {
+    "word": "EKS (Elastic Kubernetes Service)",
+    "definition": "A managed service to run and scale Kubernetes on AWS."
+  },
+  {
+    "word": "Kinesis",
+    "definition": "A service to collect, process, and analyze real-time, streaming data."
+  },
+  {
+    "word": "Redshift",
+    "definition": "A fully managed, petabyte-scale data warehouse service in the cloud."
+  },
+  {
+    "word": "Aurora",
+    "definition": "A MySQL and PostgreSQL-compatible relational database built for the cloud, offering high performance and availability."
+  },
+  {
+    "word": "Cognito",
+    "definition": "Provides user identity and data synchronization services, allowing you to securely manage and authenticate users for your web and mobile apps."
+  },
+  {
+    "word": "Elastic Beanstalk",
+    "definition": "An easy-to-use service for deploying and scaling web applications and services developed with Java, .NET, PHP, Node.js, Python, Ruby, Go, and Docker."
+  },
+  {
+    "word": "Secrets Manager",
+    "definition": "Helps you protect secrets needed to access your applications, services, and IT resources. The service enables you to easily rotate, manage, and retrieve database credentials, API keys, and other secrets throughout their lifecycle."
+  },
+  {
+    "word": "AWS Glue",
+    "definition": "A fully managed extract, transform, and load (ETL) service that makes it easy for customers to prepare and load their data for analytics."
+  },
+  {
+    "word": "Athena",
+    "definition": "An interactive query service that makes it easy to analyze data in Amazon S3 using standard SQL."
+  },
+  {
+    "word": "Step Functions",
+    "definition": "A serverless function orchestrator that makes it easy to sequence AWS Lambda functions and multiple AWS services into business-critical applications."
+  },
+  {
+    "word": "CloudTrail",
+    "definition": "A service that enables governance, compliance, operational auditing, and risk auditing of your AWS account. It logs actions taken by a user, role, or an AWS service."
+  },
+  {
+    "word": "CodeCommit",
+    "definition": "A fully-managed source control service that hosts secure and private Git repositories."
+  },
+  {
+    "word": "CodeBuild",
+    "definition": "A fully managed continuous integration service that compiles source code, runs tests, and produces software packages that are ready to deploy."
+  },
+  {
+    "word": "CodeDeploy",
+    "definition": "A fully managed deployment service that automates software deployments to a variety of compute services such as Amazon EC2, AWS Fargate, AWS Lambda, and your on-premises servers."
+  },
+  {
+    "word": "CodePipeline",
+    "definition": "A fully managed continuous delivery service that helps you automate your release pipelines for fast and reliable application and infrastructure updates."
+  }
+]
