@@ -1,0 +1,12 @@
+{
+  "name": "get-definition",
+  "version": "1.0.0",
+  "description": "Lambda function to get AWS service definitions",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.1400.0"
+  },
+  "scripts": {
+    "zip": "zip -r ../get_definition.zip ."
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "add-service",
+  "version": "1.0.0",
+  "description": "Lambda function to add new AWS services",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.1400.0"
+  },
+  "scripts": {
+    "zip": "zip -r ../add_service.zip ."
+  }
+}
