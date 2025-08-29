@@ -3,123 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Dictionary</title>
+    <title>🌈 AWS Cloud Dictionary ✨</title>
     <style>
-        /* Basic CSS Reset & Font Styling */
-        :root {
-            --primary-color: #007bff;
-            --light-gray: #f8f9fa;
-            --dark-gray: #343a40;
-            --border-color: #dee2e6;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
             margin: 0;
-            padding: 20px;
-            background-color: var(--light-gray);
-            color: var(--dark-gray);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-
-        /* Main container for the app */
-        .container {
-            width: 100%;
-            max-width: 600px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 30px;
+            padding: 0;
             box-sizing: border-box;
         }
 
-        /* Header styling */
-        h1 {
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: var(--dark-gray);
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Search bar styling */
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 700px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
+            background-size: 200% 100%;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
         .search-container {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 30px;
+            position: relative;
         }
 
         #searchInput {
             flex-grow: 1;
-            padding: 12px;
+            padding: 18px 24px;
             font-size: 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         #searchInput:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            border-color: #667eea;
+            background: white;
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.3),
+                0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        #searchInput::placeholder {
+            color: #adb5bd;
+            font-weight: 300;
         }
 
         #searchButton {
-            padding: 12px 20px;
+            padding: 18px 32px;
             font-size: 16px;
-            font-weight: 500;
-            background-color: var(--primary-color);
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 16px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #searchButton::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
         #searchButton:hover {
-            background-color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
         }
 
-        /* Results area styling */
-        #resultContainer {
-            border-top: 1px solid var(--border-color);
-            padding-top: 20px;
-            min-height: 50px; /* Prevents layout shift */
+        #searchButton:hover::before {
+            left: 100%;
         }
-        
-        #resultContainer .loading {
+
+        #searchButton:active {
+            transform: translateY(-1px);
+        }
+
+        #resultContainer {
+            border-top: 2px solid #e9ecef;
+            padding-top: 30px;
+            min-height: 80px;
+            position: relative;
+        }
+
+        .loading {
             text-align: center;
             color: #6c757d;
+            font-size: 18px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
 
-        #resultContainer .error {
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e9ecef;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
             text-align: center;
             color: #dc3545;
             font-weight: 500;
+            font-size: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffe6e6, #ffcccc);
+            border-radius: 12px;
+            border-left: 4px solid #dc3545;
+            animation: slideIn 0.5s ease-out;
         }
 
-        #resultContainer .definition {
+        .definition {
             font-size: 18px;
-            line-height: 1.6;
+            line-height: 1.7;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 16px;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .definition::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(102, 126, 234, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .definition:hover::before {
+            opacity: 1;
+        }
+
+        .definition strong {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 20px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Floating elements decoration */
+        .floating-element {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 50%;
+            animation: floatElement 4s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20px;
+            right: 20px;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            bottom: 20px;
+            left: 20px;
+            animation-delay: 2s;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            #searchButton {
+                width: 100%;
+            }
+        }
+
+        /* Success animation */
+        .success-animation {
+            animation: successPulse 0.6s ease-out;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Serverless Dictionary</h1>
+        <!-- Decorative floating elements -->
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
         
-        <!-- Search input and button -->
+        <h1>🌈 AWS Cloud Dictionary ✨</h1>
+        
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Enter a word...">
-            <button id="searchButton">Search</button>
+            <input type="text" id="searchInput" placeholder="🔍 Search for AWS services (e.g., EC2, S3, Lambda)...">
+            <button id="searchButton">🚀 Search</button>
         </div>
 
-        <!-- Area to display the result -->
         <div id="resultContainer">
-            <!-- Content will be added here by JavaScript -->
+            <p style="text-align: center; color: #6c757d; font-style: italic;">
+                Enter an AWS service name to get started! 🌟
+            </p>
         </div>
     </div>
 
@@ -132,54 +347,55 @@
             const performSearch = async () => {
                 const word = searchInput.value.trim();
                 if (!word) {
-                    resultContainer.innerHTML = '<p class="error">Please enter a word.</p>';
+                    resultContainer.innerHTML = '<p class="error">⚠️ Please enter a word to search!</p>';
                     return;
                 }
 
-                // 1. Show a loading message
-                resultContainer.innerHTML = '<p class="loading">Searching...</p>';
+                resultContainer.innerHTML = '<p class="loading">🔍 Searching the cloud...</p>';
                 
-                // --- IMPORTANT ---
-                // This is where you connect to your AWS backend.
-                // Replace the URL below with your actual API Gateway endpoint URL.
-                // Your URL will look something like: 
-                // https://xxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/definitions?word=${word}
-                // For now, we'll use a placeholder that you'll update after deployment
                 const apiBase = 'https://r7vtmom4ag.execute-api.ap-southeast-2.amazonaws.com/prod';
                 const apiUrl = `${apiBase}/definitions?word=${encodeURIComponent(word)}`;                
-                    try {
-                    // 2. Fetch data from the API
+                
+                try {
                     const response = await fetch(apiUrl);
 
                     if (!response.ok) {
-                        // Handle cases where the word is not found
-                        throw new Error('Definition not found.');
+                        throw new Error('❌ Service definition not found in our cloud database.');
                     }
 
                     const data = await response.json();
                     
-                    // 3. Extract the first definition and display it
-                    // Handle AWS API response format
                     if (data.definition) {
-                        resultContainer.innerHTML = `<p class="definition"><strong>${data.word}:</strong> ${data.definition}</p>`;
+                        resultContainer.innerHTML = `
+                            <div class="definition success-animation">
+                                <strong>☁️ ${data.word}</strong>
+                                ${data.definition}
+                            </div>
+                        `;
                     } else {
-                        throw new Error('Definition not found.');
+                        throw new Error('❌ Definition not found.');
                     }
 
                 } catch (error) {
-                    // 4. Show an error message if something goes wrong
                     resultContainer.innerHTML = `<p class="error">${error.message}</p>`;
                 }
             };
 
-            // Trigger search on button click
             searchButton.addEventListener('click', performSearch);
 
-            // Trigger search when user presses "Enter" in the input field
             searchInput.addEventListener('keyup', (event) => {
                 if (event.key === 'Enter') {
                     performSearch();
                 }
+            });
+
+            // Add some interactive effects
+            searchInput.addEventListener('focus', () => {
+                searchInput.style.transform = 'scale(1.02)';
+            });
+
+            searchInput.addEventListener('blur', () => {
+                searchInput.style.transform = 'scale(1)';
             });
         });
     </script>
