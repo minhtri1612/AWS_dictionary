@@ -145,9 +145,9 @@
                 // Your URL will look something like: 
                 // https://xxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/definitions?word=${word}
                 // For now, we'll use a placeholder that you'll update after deployment
-                const apiUrl = `YOUR_API_GATEWAY_URL/prod/definitions?word=${word}`;
-
-                try {
+                const apiBase = 'https://r7vtmom4ag.execute-api.ap-southeast-2.amazonaws.com/prod';
+                const apiUrl = `${apiBase}/definitions?word=${encodeURIComponent(word)}`;                
+                    try {
                     // 2. Fetch data from the API
                     const response = await fetch(apiUrl);
 

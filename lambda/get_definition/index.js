@@ -24,17 +24,21 @@ exports.handler = async (event) => {
             return response;
         }
 
-        // Query DynamoDB for the service definition
+        // Scan DynamoDB for services that contain the search term
         const params = {
             TableName: process.env.DYNAMODB_TABLE,
-            Key: {
-                word: word
+            FilterExpression: 'contains(#word, :searchTerm)',
+            ExpressionAttributeNames: {
+                '#word': 'word'
+            },
+            ExpressionAttributeValues: {
+                ':searchTerm': word
             }
         };
 
-        const result = await dynamodb.get(params).promise();
+        const result = await dynamodb.scan(params).promise();
 
-        if (!result.Item) {
+        if (!result.Items || result.Items.length === 0) {
             response.statusCode = 404;
             response.body = JSON.stringify({
                 error: 'Service definition not found',
@@ -43,9 +47,11 @@ exports.handler = async (event) => {
             return response;
         }
 
+        // Return the first match (you could also return all matches if needed)
+        const service = result.Items[0];
         response.body = JSON.stringify({
-            word: result.Item.word,
-            definition: result.Item.definition
+            word: service.word,
+            definition: service.definition
         });
 
     } catch (error) {
