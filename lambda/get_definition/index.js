@@ -1,5 +1,10 @@
-const AWS = require('aws-sdk');
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+// v3 requires modular imports
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
+
+// Initialize the client and then the DocumentClient
+const client = new DynamoDBClient({});
+const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
     const response = {
@@ -13,53 +18,38 @@ exports.handler = async (event) => {
     };
 
     try {
-        // Get the word from query parameters
-        const word = event.queryStringParameters?.word;
-        
-        if (!word) {
+        const requestBody = JSON.parse(event.body);
+        const { word, definition } = requestBody;
+
+        if (!word || !definition) {
             response.statusCode = 400;
-            response.body = JSON.stringify({
-                error: 'Word parameter is required'
-            });
+            response.body = JSON.stringify({ error: 'Both word and definition are required' });
             return response;
         }
 
-        // Scan DynamoDB for services that contain the search term
-        const params = {
+        // In v3, you create a command object
+        const command = new PutCommand({
             TableName: process.env.DYNAMODB_TABLE,
-            FilterExpression: 'contains(#word, :searchTerm)',
-            ExpressionAttributeNames: {
-                '#word': 'word'
-            },
-            ExpressionAttributeValues: {
-                ':searchTerm': word
+            Item: {
+                word: word,
+                definition: definition,
+                createdAt: new Date().toISOString()
             }
-        };
+        });
 
-        const result = await dynamodb.scan(params).promise();
+        // And send it using the client. No .promise() needed.
+        await docClient.send(command);
 
-        if (!result.Items || result.Items.length === 0) {
-            response.statusCode = 404;
-            response.body = JSON.stringify({
-                error: 'Service definition not found',
-                word: word
-            });
-            return response;
-        }
-
-        // Return the first match (you could also return all matches if needed)
-        const service = result.Items[0];
         response.body = JSON.stringify({
-            word: service.word,
-            definition: service.definition
+            message: 'Service added successfully',
+            word: word,
+            definition: definition
         });
 
     } catch (error) {
         console.error('Error:', error);
         response.statusCode = 500;
-        response.body = JSON.stringify({
-            error: 'Internal server error'
-        });
+        response.body = JSON.stringify({ error: 'Internal server error' });
     }
 
     return response;
