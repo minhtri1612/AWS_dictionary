@@ -7,51 +7,48 @@ exports.handler = async (event) => {
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Content-Type': 'application/json'
         },
         body: ''
     };
 
     try {
-        // Get the word from query parameters
-        const word = event.queryStringParameters?.word;
+        // Handle CORS preflight
+        if (event.httpMethod === 'OPTIONS') {
+            response.body = JSON.stringify({ message: 'OK' });
+            return response;
+        }
+
+        // Accept either path parameter /definitions/{word} or query parameter ?word=
+        const wordFromPath = event.pathParameters && event.pathParameters.word;
+        const wordFromQuery = event.queryStringParameters && event.queryStringParameters.word;
+        const candidate = typeof wordFromPath === 'string' ? wordFromPath : (typeof wordFromQuery === 'string' ? wordFromQuery : '');
+        const word = candidate ? decodeURIComponent(candidate).trim() : '';
         
         if (!word) {
             response.statusCode = 400;
-            response.body = JSON.stringify({
-                error: 'Word parameter is required'
-            });
+            response.body = JSON.stringify({ error: 'Word is required' });
             return response;
         }
 
-        // Scan DynamoDB for services that contain the search term
-        const params = {
+        // Get by primary key for exact match
+        const getParams = {
             TableName: process.env.DYNAMODB_TABLE,
-            FilterExpression: 'contains(#word, :searchTerm)',
-            ExpressionAttributeNames: {
-                '#word': 'word'
-            },
-            ExpressionAttributeValues: {
-                ':searchTerm': word
-            }
+            Key: { word }
         };
 
-        const result = await dynamodb.scan(params).promise();
+        const result = await dynamodb.get(getParams).promise();
 
-        if (!result.Items || result.Items.length === 0) {
+        if (!result.Item) {
             response.statusCode = 404;
-            response.body = JSON.stringify({
-                error: 'Service definition not found',
-                word: word
-            });
+            response.body = JSON.stringify({ error: 'Service definition not found', word });
             return response;
         }
 
-        // Return the first match (you could also return all matches if needed)
-        const service = result.Items[0];
         response.body = JSON.stringify({
-            word: service.word,
-            definition: service.definition
+            word: result.Item.word,
+            definition: result.Item.definition
         });
 
     } catch (error) {
