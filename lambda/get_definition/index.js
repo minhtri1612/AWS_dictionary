@@ -1,5 +1,10 @@
-const AWS = require('aws-sdk');
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+// v3 requires modular imports
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, GetCommand } = require("@aws-sdk/lib-dynamodb");
+
+// Initialize the client and then the DocumentClient
+const client = new DynamoDBClient({});
+const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
     const response = {
@@ -32,13 +37,13 @@ exports.handler = async (event) => {
             return response;
         }
 
-        // Get by primary key for exact match
-        const getParams = {
+        // Get by primary key for exact match using v3 SDK
+        const command = new GetCommand({
             TableName: process.env.DYNAMODB_TABLE,
             Key: { word }
-        };
+        });
 
-        const result = await dynamodb.get(getParams).promise();
+        const result = await docClient.send(command);
 
         if (!result.Item) {
             response.statusCode = 404;
@@ -54,9 +59,7 @@ exports.handler = async (event) => {
     } catch (error) {
         console.error('Error:', error);
         response.statusCode = 500;
-        response.body = JSON.stringify({
-            error: 'Internal server error'
-        });
+        response.body = JSON.stringify({ error: 'Internal server error' });
     }
 
     return response;

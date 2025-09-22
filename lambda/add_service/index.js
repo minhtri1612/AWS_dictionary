@@ -1,7 +1,13 @@
-const AWS = require('aws-sdk');
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+// 1. V3: Modular imports - only import the clients and commands you need.
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
+
+// 2. V3: Initialize clients outside the handler for best practice (performance).
+const client = new DynamoDBClient({});
+const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
+    // The response object structure remains the same.
     const response = {
         statusCode: 200,
         headers: {
@@ -13,11 +19,10 @@ exports.handler = async (event) => {
     };
 
     try {
-        // Parse the request body
+        // The core logic of parsing and validating the body is unchanged.
         const requestBody = JSON.parse(event.body);
         const { word, definition } = requestBody;
 
-        // Validate input
         if (!word || !definition) {
             response.statusCode = 400;
             response.body = JSON.stringify({
@@ -26,7 +31,6 @@ exports.handler = async (event) => {
             return response;
         }
 
-        // Add the service to DynamoDB
         const params = {
             TableName: process.env.DYNAMODB_TABLE,
             Item: {
@@ -36,7 +40,8 @@ exports.handler = async (event) => {
             }
         };
 
-        await dynamodb.put(params).promise();
+        // 3. V3: Use the .send() method with a command object. No more .promise().
+        await docClient.send(new PutCommand(params));
 
         response.body = JSON.stringify({
             message: 'Service added successfully',

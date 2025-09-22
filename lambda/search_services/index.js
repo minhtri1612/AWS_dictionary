@@ -1,5 +1,10 @@
-const AWS = require('aws-sdk');
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+// v3: Import specific clients and commands
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+
+// v3: Initialize the base client, then wrap it with the DocumentClient
+const client = new DynamoDBClient({});
+const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
     const response = {
@@ -13,7 +18,7 @@ exports.handler = async (event) => {
     };
 
     try {
-        // Get the search term from query parameters
+        // Get the search term from query parameters (this part is unchanged)
         const searchTerm = event.queryStringParameters?.q;
         
         if (!searchTerm) {
@@ -24,14 +29,15 @@ exports.handler = async (event) => {
             return response;
         }
 
-        // Scan DynamoDB and filter results
-        const params = {
+        // v3: Create a command object with the parameters
+        const command = new ScanCommand({
             TableName: process.env.DYNAMODB_TABLE
-        };
+        });
 
-        const result = await dynamodb.scan(params).promise();
+        // v3: Send the command using the client. No .promise() is needed.
+        const result = await docClient.send(command);
         
-        // Filter results based on search term
+        // Filter logic remains the same
         const filteredResults = result.Items.filter(item => 
             item.word.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.definition.toLowerCase().includes(searchTerm.toLowerCase())
