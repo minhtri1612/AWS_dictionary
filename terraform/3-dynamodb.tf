@@ -1,7 +1,7 @@
 # DynamoDB table for storing AWS service definitions
 resource "aws_dynamodb_table" "aws_services" {
   name           = "aws-services-dictionary"
-  billing_mode   = "PAY_PER_REQUEST"
+  billing_mode   = "PAY_PER_REQUEST"  # On demand
   hash_key       = "word"
 
   attribute {

@@ -332,6 +332,13 @@
             <button id="searchButton">🚀 Search</button>
         </div>
 
+        <!-- Add New Service -->
+        <div class="search-container" style="margin-top: 10px;">
+            <input type="text" id="newWordInput" placeholder="➕ New service name (e.g., Kinesis)">
+            <input type="text" id="newDefinitionInput" placeholder="📝 Definition">
+            <button id="addButton">✨ Add</button>
+        </div>
+
         <div id="resultContainer">
             <p style="text-align: center; color: #6c757d; font-style: italic;">
                 Enter an AWS service name to get started! 🌟
@@ -383,6 +390,49 @@
             };
 
             searchButton.addEventListener('click', performSearch);
+
+            // Add new service
+            const addButton = document.getElementById('addButton');
+            const newWordInput = document.getElementById('newWordInput');
+            const newDefinitionInput = document.getElementById('newDefinitionInput');
+
+            const addService = async () => {
+                const word = (newWordInput.value || '').trim();
+                const definition = (newDefinitionInput.value || '').trim();
+
+                if (!word || !definition) {
+                    resultContainer.innerHTML = '<p class="error">⚠️ Please enter both service name and definition!</p>';
+                    return;
+                }
+
+                resultContainer.innerHTML = '<p class="loading">🛠️ Adding new service...</p>';
+
+                try {
+                    const resp = await fetch(`${apiBase}/services`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ word, definition })
+                    });
+
+                    if (!resp.ok) {
+                        throw new Error('❌ Failed to add service.');
+                    }
+
+                    const data = await resp.json();
+                    resultContainer.innerHTML = `
+                        <div class="definition success-animation">
+                            <strong>✅ Added: ${data.word}</strong>
+                            ${data.definition}
+                        </div>
+                    `;
+                    newWordInput.value = '';
+                    newDefinitionInput.value = '';
+                } catch (e) {
+                    resultContainer.innerHTML = `<p class="error">${e.message}</p>`;
+                }
+            };
+
+            addButton.addEventListener('click', addService);
 
             searchInput.addEventListener('keyup', (event) => {
                 if (event.key === 'Enter') {
