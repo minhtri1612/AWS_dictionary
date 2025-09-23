@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌈 AWS Cloud Dictionary ✨</title>
+    <!-- Force Amplify redeploy - v2.0 -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 700px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
+            background-size: 200% 100%;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .search-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        #searchInput {
+            flex-grow: 1;
+            padding: 18px 24px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.3),
+                0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        #searchInput::placeholder {
+            color: #adb5bd;
+            font-weight: 300;
+        }
+
+        #searchButton {
+            padding: 18px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #searchButton::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        #searchButton:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        #searchButton:hover::before {
+            left: 100%;
+        }
+
+        #searchButton:active {
+            transform: translateY(-1px);
+        }
+
+        #resultContainer {
+            border-top: 2px solid #e9ecef;
+            padding-top: 30px;
+            min-height: 80px;
+            position: relative;
+        }
+
+        .loading {
+            text-align: center;
+            color: #6c757d;
+            font-size: 18px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e9ecef;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            text-align: center;
+            color: #dc3545;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffe6e6, #ffcccc);
+            border-radius: 12px;
+            border-left: 4px solid #dc3545;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .definition {
+            font-size: 18px;
+            line-height: 1.7;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 16px;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .definition::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(102, 126, 234, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .definition:hover::before {
+            opacity: 1;
+        }
+
+        .definition strong {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 20px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Floating elements decoration */
+        .floating-element {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 50%;
+            animation: floatElement 4s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20px;
+            right: 20px;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            bottom: 20px;
+            left: 20px;
+            animation-delay: 2s;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            #searchButton {
+                width: 100%;
+            }
+        }
+
+        /* Success animation */
+        .success-animation {
+            animation: successPulse 0.6s ease-out;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Decorative floating elements -->
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        
+        <h1>🌈 AWS Cloud Dictionary ✨</h1>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="🔍 Search for AWS services (e.g., EC2, S3, Lambda)...">
+            <button id="searchButton">🚀 Search</button>
+        </div>
+
+        <!-- Add New Service -->
+
+
+        <div id="resultContainer">
+            <p style="text-align: center; color: #6c757d; font-style: italic;">
+                Enter an AWS service name to get started! 🌟
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const resultContainer = document.getElementById('resultContainer');
+            // Single source of truth for API base used by both search and add
+
+            const performSearch = async () => {
+                const word = searchInput.value.trim();
+                if (!word) {
+                    resultContainer.innerHTML = '<p class="error">⚠️ Please enter a word to search!</p>';
+                    return;
+                }
+
+                resultContainer.innerHTML = '<p class="loading">🔍 Searching the cloud...</p>';
+            const apiBase = 'https://oorjt18g85.execute-api.ap-southeast-2.amazonaws.com/prod';
+
+                // Use search endpoint for case-insensitive, partial matching
+                const apiUrl = `${apiBase}/search?q=${encodeURIComponent(word)}`;                
+                
+                try {
+                    const response = await fetch(apiUrl);
+
+                    if (!response.ok) {
+                        throw new Error('❌ Service definition not found in our cloud database.');
+                    }
+
+                    const data = await response.json();
+                    const items = Array.isArray(data.results) ? data.results : [];
+                    if (items.length === 0) {
+                        throw new Error('❌ Service definition not found in our cloud database.');
+                    }
+
+                    // Prefer exact (case-insensitive) word match, otherwise take first result
+                    const exact = items.find(i => (i.word || '').toLowerCase() === word.toLowerCase());
+                    const chosen = exact || items[0];
+
+                    resultContainer.innerHTML = `
+                        <div class="definition success-animation">
+                            <strong>☁️ ${chosen.word}</strong>
+                            ${chosen.definition}
+                        </div>
+                    `;
+
+                } catch (error) {
+                    resultContainer.innerHTML = `<p class="error">${error.message}</p>`;
+                }
+            };
+
+            searchButton.addEventListener('click', performSearch);
+
+            // Add new service
+            const addButton = document.getElementById('addButton');
+            const newWordInput = document.getElementById('newWordInput');
+            const newDefinitionInput = document.getElementById('newDefinitionInput');
+
+            const addService = async () => {
+                const word = (newWordInput.value || '').trim();
+                const definition = (newDefinitionInput.value || '').trim();
+
+                if (!word || !definition) {
+                    resultContainer.innerHTML = '<p class="error">⚠️ Please enter both service name and definition!</p>';
+                    return;
+                }
+
+                resultContainer.innerHTML = '<p class="loading">🛠️ Adding new service...</p>';
+
+                try {
+                    const resp = await fetch(`${apiBase}/services`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ word, definition })
+                    });
+
+                    if (!resp.ok) {
+                        throw new Error('❌ Failed to add service.');
+                    }
+
+                    const data = await resp.json();
+                    resultContainer.innerHTML = `
+                        <div class="definition success-animation">
+                            <strong>✅ Added: ${data.word}</strong>
+                            ${data.definition}
+                        </div>
+                    `;
+                    newWordInput.value = '';
+                    newDefinitionInput.value = '';
+                } catch (e) {
+                    resultContainer.innerHTML = `<p class="error">${e.message}</p>`;
+                }
+            };
+
+            addButton.addEventListener('click', addService);
+
+            searchInput.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // Add some interactive effects
+            searchInput.addEventListener('focus', () => {
+                searchInput.style.transform = 'scale(1.02)';
+            });
+
+            searchInput.addEventListener('blur', () => {
+                searchInput.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+
+</body>
+</html>

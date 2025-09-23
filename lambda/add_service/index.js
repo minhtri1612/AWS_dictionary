@@ -21,7 +21,9 @@ exports.handler = async (event) => {
     try {
         // The core logic of parsing and validating the body is unchanged.
         const requestBody = JSON.parse(event.body);
-        const { word, definition } = requestBody;
+        const { word: rawWord, definition: rawDefinition } = requestBody;
+        const word = rawWord ? rawWord.trim() : undefined;
+        const definition = rawDefinition ? rawDefinition.trim() : undefined;
 
         if (!word || !definition) {
             response.statusCode = 400;
