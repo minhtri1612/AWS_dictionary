@@ -359,7 +359,8 @@
                 resultContainer.innerHTML = '<p class="loading">🔍 Searching the cloud...</p>';
             const apiBase = 'https://oorjt18g85.execute-api.ap-southeast-2.amazonaws.com/prod';
 
-                const apiUrl = `${apiBase}/definitions?word=${encodeURIComponent(word)}`;                
+                // Use search endpoint for case-insensitive, partial matching
+                const apiUrl = `${apiBase}/search?q=${encodeURIComponent(word)}`;                
                 
                 try {
                     const response = await fetch(apiUrl);
@@ -369,17 +370,21 @@
                     }
 
                     const data = await response.json();
-                    
-                    if (data.definition) {
-                        resultContainer.innerHTML = `
-                            <div class="definition success-animation">
-                                <strong>☁️ ${data.word}</strong>
-                                ${data.definition}
-                            </div>
-                        `;
-                    } else {
-                        throw new Error('❌ Definition not found.');
+                    const items = Array.isArray(data.results) ? data.results : [];
+                    if (items.length === 0) {
+                        throw new Error('❌ Service definition not found in our cloud database.');
                     }
+
+                    // Prefer exact (case-insensitive) word match, otherwise take first result
+                    const exact = items.find(i => (i.word || '').toLowerCase() === word.toLowerCase());
+                    const chosen = exact || items[0];
+
+                    resultContainer.innerHTML = `
+                        <div class="definition success-animation">
+                            <strong>☁️ ${chosen.word}</strong>
+                            ${chosen.definition}
+                        </div>
+                    `;
 
                 } catch (error) {
                     resultContainer.innerHTML = `<p class="error">${error.message}</p>`;
